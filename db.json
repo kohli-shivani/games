@@ -109,6 +109,16 @@
         "agenda": "test"
       },
       "id": 2
+    },
+    {
+      "roomId": 3,
+      "bookingDate": "2020-04-06",
+      "slotId": 5,
+      "userDetails": {
+        "username": "test1",
+        "agenda": "test"
+      },
+      "id": 3
     }
   ]
 }
