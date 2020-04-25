@@ -6,14 +6,15 @@ import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class GameService {
 
   constructor(private http: HttpClient) { }
 
-  checkUser(username,password){
-    return this.http.get(env.apiUrl+`/users?username=${username}&password=${password}`,{
+  getAllGames(){
+    return this.http.get(env.apiUrl+'gamesext',{
     }).pipe(map(data => {
             return data;
         }));
   }
+
 }

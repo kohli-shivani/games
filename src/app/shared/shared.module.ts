@@ -4,6 +4,9 @@ import { MaterialModule } from '@material/material.module';
 import { ReactiveFormsModule,FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { FilterPipe } from './pipes/filter.pipe';
+import { OrderModule } from 'ngx-order-pipe'; 
+import { NgxAutocompleteModule } from 'ngx-angular-autocomplete';
 
 @NgModule({
   imports: [
@@ -13,7 +16,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
     FormsModule,
     FlexLayoutModule,
     OwlDateTimeModule,
-    OwlNativeDateTimeModule
+    OwlNativeDateTimeModule,
   ],
   exports: [
     CommonModule,
@@ -22,8 +25,11 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
     FormsModule,
     FlexLayoutModule,
     OwlDateTimeModule,
-    OwlNativeDateTimeModule
+    OwlNativeDateTimeModule,
+    FilterPipe,
+    OrderModule,
+    NgxAutocompleteModule
   ],
-  declarations: []
+  declarations: [FilterPipe]
 })
 export class SharedModule { }

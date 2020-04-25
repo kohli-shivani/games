@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AddbookingComponent } from '../addbooking/addbooking.component';
-import { ManagebookingComponent } from '../managebooking/managebooking.component';
 import {  MatDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
-import { BookingService } from '@core/services/booking.service';
+import { GameService } from '@core/services/game.service';
 import { FormBuilder,FormControl, FormGroup, Validators } from '@angular/forms';
+import { OrderPipe } from 'ngx-order-pipe';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,127 +14,83 @@ import { FormBuilder,FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class DashboardComponent implements OnInit {
 
+  order: string = 'score';
+  reverse: boolean = false;
   displayedColumns:any;
-  roomDetails:any;
-  viewMeetingForm: FormGroup;
-  filterMeetingForm: FormGroup;
-  min:any;
-  max:any;
+  gameDetails:any;
+  size = 10;
+  pageIndex = 0;
+  totalSize = 0;
+  gamedataSource: any;
   submitted = false;
   dataloaded = false;
+  loading = false;
+  searchString:string = '';
+  formSearch = new FormControl();
+  filteredOptions;
 
-  constructor(private formBuilder: FormBuilder,private _api:BookingService,private datePipe: DatePipe,private dialog: MatDialog) { }
+  constructor(private orderPipe: OrderPipe,private formBuilder: FormBuilder,private _api:GameService,private datePipe: DatePipe,private dialog: MatDialog) { 
+    
+  }
 
   ngOnInit() {
     this.getMeetingSlots();
-    this.getMeetingRooms();
-    this.max = new Date();
-    this.max.setDate(this.max.getDate() + 7);
-    this.min = new Date();
+    this.getMeetingGames();
+   
 
-    if(this.min.getDay() == 0)
-      this.min = this.min.setDate(this.min.getDate()+1);
-    if(this.min.getDay() == 6)
-      this.min.setDate(this.min.getDate()+2);   
-    this.viewMeetingForm = this.formBuilder.group({
-      meetingdate:[this.min,Validators.required],
-      meetingroom:["all",Validators.required],
-    });
-    this.filterMeetingForm = this.formBuilder.group({
-      meetingroom:["all",Validators.required],
-    });
+    this.formSearch.valueChanges.subscribe(
+      ()=>{
+        this.filteredOptions =  this._filter(this.formSearch.value);
+      })
+
   }
 
-  get f() { return this.viewMeetingForm.controls; }
-  get f2() { return this.filterMeetingForm.controls; }
+  private _filter(value: string) {
+    const filterValue = value.toLowerCase();
+    return this.gamedataSource.filter(option => option['title'].toString().toLowerCase().indexOf(filterValue) === 0);
 
-  myFilter = (d: Date): Boolean => {
-    const day = d.getDay();
-    return day !== 0 && day !== 6;
   }
-  
-  getMeetingBookings(){
-    this.submitted = true;
-    if (this.viewMeetingForm.invalid) {
-        return;
+
+  setOrder(value: string) {
+    if (this.order === value) {
+      this.reverse = !this.reverse;
     }
-    let meetingdate = this.datePipe.transform(this.f.meetingdate.value, 'yyyy-MM-dd');
 
-    this._api.getAllBookingsDate(meetingdate).subscribe((bookingdata:any)=>{
-      this.dataloaded = true;
-      if(bookingdata.length > 0){
-        this.roomDetails.forEach(room => {
-          console.log(room.roomId)
-          room.bookingDetails = [];
-          let slotdata = bookingdata.filter((booking)=>booking.roomId == room.roomId);
-            this.displayedColumns.forEach(slot => {
-              let filterdata = slotdata.filter((bookingslot)=>bookingslot.slotId == slot.slotId)
-              if(filterdata.length > 0)
-                room.bookingDetails.push(...filterdata)
-              else
-                room.bookingDetails.push({"slotId":slot.slotId})  
-            });
-          console.log("slotdata----"+JSON.stringify(this.roomDetails));
-        });
-      }else{
-        console.log("inside else-----")
-        this.roomDetails.forEach(room => {
-          room.bookingDetails = [];
-          this.displayedColumns.forEach(slot => {
-              room.bookingDetails.push({"slotId":slot.slotId})  
-          });
-        });
-      }
-    },err => {
-      this.dataloaded = false;
-      console.log("inside catch error",err);
-    })
+    this.order = value;
   }
+
 
   getMeetingSlots(){
-    this._api.getAllSlots().subscribe((slotdata:any)=>{
-      if(slotdata){
-        this.displayedColumns = slotdata;
-      }
-    },err => {
-      console.log("inside catch error",err);
-    })
+    this.displayedColumns = [{'id':'title','name':'Title'},
+    {'id':'platform','name':'Platform'},
+    {'id':'score','name':'Score'},
+    {'id':'genre','name':'Genre'},
+    {'id':'editors_choice','name':'Editors Choice'},
+    {'id':'year','name':'Release Year'}];
   }
 
-  getMeetingRooms(){
-    this._api.getAllRooms().subscribe((data:any)=>{
+
+  getMeetingGames(){
+    this.loading = true;
+    this._api.getAllGames().subscribe((data:any)=>{
       if(data){
         this.dataloaded = true;
-        this.roomDetails = data;
-        this.getMeetingBookings();
+        this.loading = false;
+        this.gameDetails = data;
+        this.gamedataSource = data;
+        this.totalSize = this.gameDetails.length;
+        this.orderPipe.transform(this.gamedataSource, 'title');
       }
     },err => {
       this.dataloaded = false;
+      this.loading = false;
       console.log("inside catch error",err);
     })
   }
 
-  openAddModal(){
-   this.dialog.open(AddbookingComponent,{
-      panelClass: 'add-modal',
-      disableClose: true
-    });
-  }
-
-  openManageModal(details,slotId){
-    console.log(JSON.stringify(details));
-    console.log(slotId);
-    let bookingdetails = {
-      id:details.id,
-      username:details.userDetails.username,
-      agenda:details.userDetails.agenda,
-    }
-    this.dialog.open(ManagebookingComponent,{
-      panelClass: 'manage-modal',
-      disableClose: true,
-      data: bookingdetails
-    });
-
+  paginate(event: any) {
+    this.pageIndex=event;
+    this.gamedataSource = this.gameDetails.slice(event * this.size - this.size, event * this.size);
   }
 
 }

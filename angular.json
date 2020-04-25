@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "meetingroom-booking": {
+    "game-booking": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/meetingroom-booking",
+            "outputPath": "dist/game-booking",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -74,18 +74,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "meetingroom-booking:build"
+            "browserTarget": "game-booking:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "meetingroom-booking:build:production"
+              "browserTarget": "game-booking:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "meetingroom-booking:build"
+            "browserTarget": "game-booking:build"
           }
         },
         "test": {
@@ -122,15 +122,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "meetingroom-booking:serve"
+            "devServerTarget": "game-booking:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "meetingroom-booking:serve:production"
+              "devServerTarget": "game-booking:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "meetingroom-booking"
+  "defaultProject": "game-booking"
 }

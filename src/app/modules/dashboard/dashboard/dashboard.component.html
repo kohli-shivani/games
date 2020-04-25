@@ -1,8 +1,8 @@
 <div *ngIf="dataloaded == true" class="paddingAll" fxLayoutGap="1rem" fxFlexFill fxLayout="column">
-  <div fxLayout="row" >
+  <!-- <div fxLayout="row" >
     <button class="btn btn-primary" fxFlex="20%" (click)="openAddModal()">Schedule Meeting</button>
-  </div>
-  <form fxLayout="row" fxLayoutGap="1rem" [formGroup]="viewMeetingForm" (ngSubmit)="getMeetingBookings()">
+  </div> -->
+  <!-- <form fxLayout="row" fxLayoutGap="1rem" [formGroup]="viewMeetingForm" (ngSubmit)="getMeetingBookings()">
     <div fxFlex="30%" class="form-group fullWidth">
       <span class="formLabel">Date*</span>
       <input [min]="min" [max]="max" formControlName="meetingdate" [ngClass]="{ 'invalid-input-box': submitted && f.meetingdate.errors }" class="form-control" [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" name="meetingdate" [owlDateTimeFilter]="myFilter">
@@ -14,39 +14,64 @@
     <div fxFlex="20%" fxLayoutAlign="center center">
       <button class="fullWidth btn btn-primary" mat-raised-button color="primary">View Meetings</button>
     </div>
-  </form>
+  </form> -->
 
-  <form fxLayout="row" fxLayoutGap="1rem" [formGroup]="filterMeetingForm">
+  <!-- <form fxLayout="row" fxLayoutGap="1rem">
     <div fxFlex="30%" class="form-group fullWidth">
-      <span class="formLabel">Meeting Room*</span>
-      <select class="form-control" name="meetingroom" formControlName="meetingroom">
-      <option value="all" selected>All</option>
-      <option *ngFor="let room of roomDetails" value="{{room.roomId}}">{{room.roomName}}</option>
-      </select>
-      <div *ngIf="submitted && f2.meetingroom.errors" class="invalid-input-text">
-          <div *ngIf="f2.meetingroom.errors.required">Meeting room is required</div>
-      </div>
+      <span class="formLabel">Filter By Title*</span>
+      <input
+      type="text"
+      class="form-control"
+      name="searchString"
+      placeholder="Type to search..."
+      [(ngModel)]="searchString"
+      />
     </div>
+  </form> -->
+  <form fxLayout="row" fxLayoutGap="1rem">
+    <div fxFlex="30%" class="form-group fullWidth">
+    <mat-form-field appearance="fill" class="example-full-width">
+      <input type="text"
+             placeholder="Search By Title"
+             aria-label="Number"
+             matInput
+             [formControl]="formSearch"
+             [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions" [value]="option.title">
+          {{option.title}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
   </form>
 
   <table id="meeting-table" class="table table-responsive">
     <thead>
-      <th></th>
-      <th *ngFor="let head of displayedColumns">{{head.slotName}}</th>
+      <th *ngFor="let head of displayedColumns" 
+      [class.active]="order == head.id"
+      (click)="setOrder(head.id)"
+      >{{head.name}} <span [hidden]="reverse">▼</span
+        ><span [hidden]="!reverse">▲</span>
+      </th>
     </thead>
     <tbody>
-      <tr *ngFor="let room of roomDetails">
-        <ng-container *ngIf="f2.meetingroom.value == 'all' || f2.meetingroom.value == room.roomId">
-          <td>{{room.roomName}}</td>
-          <ng-container *ngFor="let booking of room.bookingDetails">
-            <td style="cursor: pointer;" (click)="openManageModal(booking,i)" *ngIf="booking.userDetails" class="red">Booked</td>
-            <td *ngIf="!booking.userDetails" class="green">Available</td>
-          </ng-container>
-        </ng-container>
+      <tr *ngFor="let game of gamedataSource | filter : 'title' : formSearch.value |  orderBy: order:reverse:'case-insensitive' | paginate: {itemsPerPage: size, currentPage: p}">
+          <td>{{game.title}}</td>
+          <td>{{game.platform}}</td>
+          <td>{{game.score}}</td>
+          <td>{{game.genre}}</td>
+          <td [ngClass]="game.editors_choice == 'Y'?'green':'red'">{{game.editors_choice}}</td>
+          <td>{{game.release_year}}</td>
       </tr>
     </tbody>
   </table>
+  <pagination-controls fxLayout="row" fxLayoutAlign="end" autoHide="true" directionLinks="true" responsive="true" previousLabel="<"
+        nextLabel=">" (pageChange)="p = $event"></pagination-controls>
 </div>
-<div class="red" *ngIf="dataloaded == false" fxLayout="row" fxLayoutAlign="center center">  
+<div class="red marginTop" *ngIf="dataloaded == false && loading == false" fxLayout="row" fxLayoutAlign="center center">  
   <h4>Something went wrong please try again later</h4>
+</div>
+<div class="red marginTop" *ngIf="loading == true" fxLayout="row" fxLayoutAlign="center center">  
+  <h4>Loading...</h4>
 </div>
