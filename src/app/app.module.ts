@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { AppRoutingModule } from '@core/routing/routing';
+import { AppRoutingModule } from './core/routing/routing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CoreModule } from '@core/core.module';
-import { AppComponent } from '@app/app.component';
+import { CoreModule } from './core/core.module';
+import { AppComponent } from './app.component';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 @NgModule({
