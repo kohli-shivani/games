@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {  MatDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
-import { GameService } from '@core/services/game.service';
+import { GameService } from '../../../core/services/game.service';
 import { FormBuilder,FormControl, FormGroup, Validators } from '@angular/forms';
 import { OrderPipe } from 'ngx-order-pipe';
 import {Observable} from 'rxjs';
