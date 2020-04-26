@@ -1,22 +1,27 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from '../guards/auth.guard';
-import { AfterloginComponent } from '../../layouts/afterlogin/afterlogin.component';
+import { NgModule } from "@angular/core";
+import { Routes, RouterModule } from "@angular/router";
+import { AuthGuard } from "../guards/auth.guard";
+import { AfterloginComponent } from "../../layouts/afterlogin/afterlogin.component";
 
 const routes: Routes = [
- 
   {
-    path: '',
+    path: "",
     component: AfterloginComponent,
     canActivate: [AuthGuard],
     children: [
       {
-        path: '',
-        loadChildren: '@modules/dashboard/dashboard.module#DashboardModule',
+        path: "",
+        loadChildren: () =>
+          import("../../modules/dashboard/dashboard.module").then(
+            m => m.DashboardModule
+          )
       },
       {
-        path: 'dashboard',
-        loadChildren: '@modules/dashboard/dashboard.module#DashboardModule',
+        path: "dashboard",
+        loadChildren: () =>
+          import("../../modules/dashboard/dashboard.module").then(
+            m => m.DashboardModule
+          )
       }
     ]
   }
@@ -26,4 +31,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { } 
+export class AppRoutingModule {}

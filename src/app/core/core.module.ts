@@ -1,25 +1,25 @@
-import { NgModule, Optional, SkipSelf } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenInterceptor } from './interceptors/token.interceptor';
-import { AuthGuard } from './guards/auth.guard';
-import { BeforeloginComponent } from '../layouts/beforelogin/beforelogin.component';
-import { AfterloginComponent } from '../layouts/afterlogin/afterlogin.component';
-import { HeaderComponent } from '../layouts/header/header.component';
-import { FooterComponent } from '../layouts/footer/footer.component';
-import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MaterialModule } from '@material/material.module';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
+import { NgModule } from "@angular/core";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { TokenInterceptor } from "./interceptors/token.interceptor";
+import { AuthGuard } from "./guards/auth.guard";
+import { BeforeloginComponent } from "../layouts/beforelogin/beforelogin.component";
+import { AfterloginComponent } from "../layouts/afterlogin/afterlogin.component";
+import { HeaderComponent } from "../layouts/header/header.component";
+import { FooterComponent } from "../layouts/footer/footer.component";
+import { RouterModule } from "@angular/router";
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { MaterialModule } from "../material/material.module";
+import { MatIconRegistry } from "@angular/material/icon";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @NgModule({
-  imports: [
-    HttpClientModule,
-    RouterModule,
-    FlexLayoutModule,
-    MaterialModule
+  imports: [HttpClientModule, RouterModule, FlexLayoutModule, MaterialModule],
+  declarations: [
+    BeforeloginComponent,
+    AfterloginComponent,
+    HeaderComponent,
+    FooterComponent
   ],
-  declarations: [BeforeloginComponent,AfterloginComponent,HeaderComponent, FooterComponent],
   providers: [
     AuthGuard,
     {
@@ -28,10 +28,11 @@ import { DomSanitizer } from '@angular/platform-browser';
       multi: true
     }
   ]
-
 })
 export class CoreModule {
   constructor(matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
-    matIconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('assets/mdi.svg'));
+    matIconRegistry.addSvgIconSet(
+      domSanitizer.bypassSecurityTrustResourceUrl("assets/mdi.svg")
+    );
   }
- }
+}
