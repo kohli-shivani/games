@@ -1,11 +1,11 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenInterceptor } from '@core/interceptors/token.interceptor';
-import { AuthGuard } from '@core/guards/auth.guard';
-import { BeforeloginComponent } from '@layouts/beforelogin/beforelogin.component';
-import { AfterloginComponent } from '@layouts/afterlogin/afterlogin.component';
-import { HeaderComponent } from '@layouts/header/header.component';
-import { FooterComponent } from '@layouts/footer/footer.component';
+import { TokenInterceptor } from './interceptors/token.interceptor';
+import { AuthGuard } from './guards/auth.guard';
+import { BeforeloginComponent } from '../layouts/beforelogin/beforelogin.component';
+import { AfterloginComponent } from '../layouts/afterlogin/afterlogin.component';
+import { HeaderComponent } from '../layouts/header/header.component';
+import { FooterComponent } from '../layouts/footer/footer.component';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from '@material/material.module';

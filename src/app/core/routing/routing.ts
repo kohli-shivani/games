@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from '@core/guards/auth.guard';
-import { BeforeloginComponent } from '@layouts/beforelogin/beforelogin.component';
-import { AfterloginComponent } from '@layouts/afterlogin/afterlogin.component';
+import { AuthGuard } from '../guards/auth.guard';
+import { AfterloginComponent } from '../../layouts/afterlogin/afterlogin.component';
 
 const routes: Routes = [
  
