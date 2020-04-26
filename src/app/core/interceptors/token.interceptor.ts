@@ -18,11 +18,11 @@ export class TokenInterceptor implements HttpInterceptor {
     let req;
     req = request.clone({
       headers: new HttpHeaders({
-        "access-control-allow-headers":
-          "Origin, X-Requested-With, Content-Type, Accept",
-        "access-control-allow-methods": "GET, POST, PUT",
-        "access-control-allow-origin": "*",
-        server: "cloudflare-nginx"
+        'access-control-allow-headers':
+        'Origin, X-Requested-With, Content-Type, Accept',
+        'server': 'cloudflare-nginx',
+        'access-control-allow-methods': 'GET, POST, PUT',
+        'access-control-allow-origin': '*'
       })
     });
 
